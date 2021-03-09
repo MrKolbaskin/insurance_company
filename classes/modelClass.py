@@ -42,7 +42,7 @@ class Model:
         self.contracts = {key : [] for key in self.contracts_info}
         self.m = m
         self.logs = []
-        self.cur_mes = 0
+        self.cur_month = 0
         """
         пример словаря contracts_info
         {
@@ -59,6 +59,12 @@ class Model:
         if not rate:
             rate = 0.01
         return rate
+    
+    def __generate_demand(self):
+        pass
+
+    def __generate_events(self):
+        pass
 
     @staticmethod
     def __generate_contracts(contract, count, contracts_info):
@@ -146,8 +152,8 @@ class Model:
         
         self.duration -= 1
         self.m -= 1
-        self.cur_mes += 1
-        self.logs.append(f'---- МЕСЯЦ {self.cur_mes} ----')
+        self.cur_month += 1
+        self.logs.append(f'---- МЕСЯЦ {self.cur_month} ----')
         self.__sell_contracts()
         self.company.sell(self.contracts)
         contribution_sum = self.company.contribution()
