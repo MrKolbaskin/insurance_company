@@ -4,6 +4,8 @@ from classes.insuredEventClass import InsuredEvent
 from resources.gc import gc_contracts
 import random
 import copy
+from pprint import pprint
+
 
 STR2CLS = {
     'AutoContract': AutoContract,
@@ -39,6 +41,8 @@ class Model:
         }
         self.contracts = {key : [] for key in self.contracts_info}
         self.m = m
+        self.logs = []
+        self.cur_mes = 0
         """
         пример словаря contracts_info
         {
@@ -72,8 +76,13 @@ class Model:
         for key in self.contracts:
             for contract in self.contracts[key]:
                 payment_sum += contract.pay()
+        #print('-----------------')
+        #print("PAYMENT_SUM =", payment_sum)
+        self.logs.append(f"Выплата по страховым случаям на сумму {payment_sum}")
+        #print("CAPITAL =", self.company.capital)
+        #print('-----------------')
         
-        self.capital -= payment_sum
+        self.company.capital -= payment_sum
 
     def __sort_insured_events(self, contracts, insured_events):
         shuffle_contracts = random.sample(contracts, k=len(contracts))
@@ -82,12 +91,14 @@ class Model:
 
     def __create_insured_events(self):
         for key in self.contracts:
+            self.logs.append(f'Произошло {self.count_events[key]} страховых случаев по страховке {key}')
             tmp_events = self.__generate_insured_events(self.count_events[key])
             self.__sort_insured_events(self.contracts[key], tmp_events)
 
 
     def __sell_contracts(self):
         for key in self.current_demand:
+            self.logs.append(f"Продажа {self.current_demand[key]} страховок вида {key}")
             self.contracts[key] += self.__generate_contracts(
                 STR2CLS[key],
                 self.current_demand[key],
@@ -102,9 +113,13 @@ class Model:
 
 
     def json(self):
+        if not hasattr(self, 'company'):
+            capital = self.capital
+        else:
+            capital = self.company.capital
         return {
             "duration": self.duration,
-            "capital": self.capital,
+            "capital": capital,
             "tax": self.tax,
             "max_events": self.max_events,
             "contracts_info": self.contracts_info,
@@ -118,8 +133,6 @@ class Model:
         Создание базовых объектов и начало моделирования
         """
         self.company = Company(capital=self.capital, contracts=copy.deepcopy(self.contracts))
-        self.__sell_contracts()
-        self.company.sell(self.contracts)
 
         
 
@@ -133,9 +146,15 @@ class Model:
         
         self.duration -= 1
         self.m -= 1
-        self.company.contribution()
+        self.cur_mes += 1
+        self.logs.append(f'---- МЕСЯЦ {self.cur_mes} ----')
+        self.__sell_contracts()
+        self.company.sell(self.contracts)
+        contribution_sum = self.company.contribution()
+        self.logs.append(f"Взнос на сумму {contribution_sum}")
         self.contracts = gc_contracts(self.contracts)
         self.__create_insured_events()
-        print(self.json())
+        pprint(self.json())
         self.__pay()
         self.company.pay_tax(percent=self.tax)
+        self.logs.append(f'Выплата налога на сумму {self.company.capital * (self.tax / 100)}')
