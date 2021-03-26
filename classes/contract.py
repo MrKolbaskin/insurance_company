@@ -21,8 +21,13 @@ class Contract:
         }
 
 class AutoContract(Contract):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.first_contribution = True
+
     def contribution(self):#внесение взноса
-        if self.duration % 12 == 0:
+        if self.first_contribution or self.duration % 12 == 0:
+            self.first_contribution = False
             res =  self.contribution_value
         else:
             res = 0
