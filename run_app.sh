@@ -1,3 +1,3 @@
 #/bin/bash
 
-python3 interface/main.py
+python3 main.py
