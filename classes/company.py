@@ -29,4 +29,5 @@ class Company:
         #    self.contracts[key] += new_contracts[key]
 
     def pay_tax(self, percent):#выплата налога
-        self.capital *= (100 - percent) / 100
+        if self.capital >= 0:
+            self.capital *= (100 - percent) / 100

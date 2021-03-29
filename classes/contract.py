@@ -4,11 +4,13 @@ class Contract:
         self.max_sum = max_sum #Максимальная сумма выплаты
         self.contribution_value = contribution_value
         self.insured_events = []
+        self.log_events = []
     
     def pay(self):
         payment_sum = 0
         for event in self.insured_events:
             payment_sum += event.rate * self.max_sum
+        self.log_events = self.insured_events
         self.insured_events = []
         return payment_sum
     
@@ -19,6 +21,9 @@ class Contract:
             "contribution_value": self.contribution_value,
             'insured_events': [event.json() for event in self.insured_events]
         }
+    
+    def contract_info(self):
+        return [self.duration, self.max_sum, self.contribution_value, '; '.join([str(event.rate) for event in self.log_events])]
 
 class AutoContract(Contract):
     def __init__(self, *args, **kwargs):
