@@ -47,7 +47,7 @@ while True:# The Event Loop
                 window['Начать'].update(disabled=True)
             elif is_edit:
                 window['Продолжить'].update(disabled=True)
-    if event == 'OK':
+    if event == 'OK' or event == "Нет":
         window.close()
         window = window_main
     if event == 'Начать':
@@ -89,7 +89,16 @@ while True:# The Event Loop
         window_main[CONTRACTS_INFO].update(model.get_contracts_info())
         window_main[CONTRACTS].update(model.get_contracts())
         window = window_main
-    if event == 'Симуляция':
+    if event == 'Симуляция до конца':
+        window.hide()
+        window = sg.Window('Предупреждение', [
+                [sg.Text('Вы точно хотите просимулировать\n до конца эскперимента?', text_color='white', size=(25, 2), font=('default', 20), justification='center', key=COMPANY_INFO)],
+                [
+                    sg.Button('Да', font=('default', 15), button_color=('black', 'green')),
+                    sg.Button('Нет', font=('default', 15), button_color=('black', 'red'))
+                ]
+            ], resizable=False, finalize=True)
+    if event == 'Да':
         mes = model.simulation()
         if mes:
             window.hide()

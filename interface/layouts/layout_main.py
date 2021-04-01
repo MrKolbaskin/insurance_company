@@ -12,7 +12,7 @@ CURRENT_DEMAND = '-CURRENT_DEMAND-'
 buttons = [
     [
         sg.Button('Следующий месяц', button_color=('black', 'green'), size=(16, 1), font=('default', 13)),
-        sg.Button('Симуляция', size=(16, 1), font=('default', 13), button_color=('black', 'orange'))
+        sg.Button('Симуляция до конца', size=(16, 1), font=('default', 13), button_color=('black', 'orange'))
     ],
     [
         sg.Button('Начать заново', button_color=('black', 'yellow'), size=(16, 1), font=('default', 13)), 
