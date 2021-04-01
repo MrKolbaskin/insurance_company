@@ -22,13 +22,12 @@ def validation(values):
         if key == 'm':
             begin_seq = 6
             end_seq = 24
-            validate_field(res, values[key], key, begin_seq=6, end_seq=24)
         elif key == 'tax':
             begin_seq = 0
             end_seq = 100
-            validate_field(res, values[key], key, begin_seq=0, end_seq=100)
-        elif key == 'capital':
-            begin_seq = 0
+        elif key == 'duration':
+            begin_seq = 1
+            end_seq = 24
             
         validate_field(res, values[key], key, begin_seq=begin_seq, end_seq=end_seq)
     
